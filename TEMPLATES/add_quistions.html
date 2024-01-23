@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+{%load static%}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add quistions page</title>
+    <link rel="icon" href="{%static 'images/logo-search-grid-1x.png'%}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        *
+        {
+            margin: 0;
+            padding: 0;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            color: black;
+            transition: all 800ms;
+        }
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: rgb(242,255,242);
+            overflow: hidden;
+        }
+        #contanir
+        {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+            margin-top: 5rem;
+        }
+        form
+        {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem 5rem;
+            border-radius: 40px;
+        }
+        form p
+        {
+            margin-left: -70%;
+            font-size: 1rem;
+        }
+        form input
+        {
+            padding: 0.5rem 1rem;
+            outline: none;
+            background-color: transparent;
+            border: none;
+            width: 100%;
+            transition: all 500ms;
+            margin-top: .5rem;
+        }
+        form input:focus {
+            border-bottom: solid 2px rgb(17, 139, 248);
+        }
+        button
+        {
+            background-color: transparent;
+            border-radius: 8px;
+            border: 1px solid rgb(17,139,248);
+            transition: all 800ms;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            margin-top: 1rem;
+            margin-left: .3rem;
+
+        }
+        button:hover
+        {
+            background-color: rgb(17,139,248);
+            box-shadow: 0px 0px 15px 10px rgb(17,139,248);
+        }
+        #delete-btn
+        {
+            border-color: red;
+        }
+        #delete-btn:hover
+        {
+            background-color: red;
+            box-shadow:0px 0px 15px 10px red; ;
+        }
+        form div button
+        {
+            font-size: .8rem;
+            width: 150px;
+
+        }
+        form div
+        {
+            width: fit-content;
+        }
+        table {
+            border-collapse: collapse;
+            width: 40%;
+            margin-top: 2rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border-radius: 10px;
+            background-color: #969292;
+            position:absolute;
+        }
+        th,
+        td {
+            padding: .5rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: rgb(17, 139, 248);
+            color: white;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        tr:nth-child(even) {
+            background-color: #c7c4c4;
+        }
+        #contanir_of_navigation
+        {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: .5rem 3rem;
+            background-color: white;
+            border-radius: 8px;
+            position: absolute;
+            top: .5rem;
+            left: 30rem;
+        }
+        @media screen and (max-width: 767px)
+        {
+            #contanir_of_navigation
+            {
+                left: 2rem;
+                padding: 0rem 1rem;
+            }
+            #contanir
+            {
+                margin-top: -4rem;
+            }
+            #contanir_of_navigation div
+            {
+                top: 2.2rem !important;
+                left: 5rem ;
+            }
+            table
+            {
+                width: 200px;
+                margin-top: -20rem !important;
+            }
+            table caption
+            {
+                margin-left: 0 !important;
+                font-size: 1rem !important;
+            }
+        }
+        #cursor
+        {
+            position: absolute;
+            width: 2rem;
+            height: 2rem;
+            transform: skew(-20deg);
+            border-radius: 30%;
+            rotate: 37deg;
+            top: 3rem;
+            background-color: rgb(242,255,242);
+        }
+        .navigationbutton
+        {
+            border: none;
+            background-color: transparent;
+            outline: none;
+            cursor: pointer;
+            color: rgb(67, 167, 255);
+        }
+        .navigationbutton:hover
+        {
+            cursor: pointer;
+            background-color: transparent;
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="contanir_of_navigation">
+        <div id="cursor" style="left: 7rem;"></div>
+        <button class="navigationbutton" onclick="navigate_to_exam()">Return to set an exam</button>
+        <button class="navigationbutton" onclick="navigate_to_degree()">See student result</button>
+    </div>
+    <div id="contanir">
+        <form id="form_quistions" method="post">
+            {% csrf_token %}
+                <p>Write The quistion here</p>
+                <input id="q" type="text" name="q1" placeholder="quistion.....">
+                <br>
+                <p>Enter the first choose</p>
+                <input id="an1" type="text" name="choose1" placeholder="first answer.....">
+                <br>
+                <p>Enter the second choose</p>
+                <input id="an2" type="text" name="choose2" placeholder="second answer.....">
+                <br>
+                <p>Enter the third choose</p>
+                <input id="an3" type="text" name="choose3" placeholder="third answer.....">
+                <br>
+                <p>Enter the right choose</p>
+                <input id="r" type="text" name="rightchoose" placeholder="right answer.....">
+                <div style="display: flex;">
+                <button type="button" id="delete-btn" onclick="delete_f()">Delete the last Exam</button>
+                <button type="button" onclick="sendquistion()">Add anthor Quistion</button></div>
+                <a href="{%url 'index_page'%}"><button>I am finshed</button></a>
+        </form>
+        <form style="display: none;" id="delete_form" method="post">
+            {% csrf_token %}
+            <input type="text" value="delete" name="delete">
+        </form>
+        <p id="check_proccess" hidden>{{proccess}}</p>
+    </div>
+    
+    <table id="myTable" style="left: 90rem;">
+        <caption
+          style="
+            font-size: 2rem;
+            margin-left:-20rem;
+            margin-bottom:1rem;
+          "
+        >
+          Student Degree:
+        </caption>
+        <thead>
+          <tr>
+            <th>Student Name</th>
+            <th>Result</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for student in students %}
+            <tr>
+                <td>{{student.name}}</td>
+                <td>{{student.exam_result}}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    <script>
+        function navigate_to_degree() {
+            document.getElementById("contanir").style.marginLeft = "-200rem";
+            document.getElementById("myTable").style.left = "5rem";
+            document.getElementById("cursor").style.left = "16.5rem";
+        }
+        function navigate_to_exam() {
+            document.getElementById("contanir").style.marginLeft = "";
+            document.getElementById("myTable").style.left = "90rem";
+            document.getElementById("cursor").style.left = "7rem";
+        }
+        
+        if(document.getElementById("check_proccess").textContent =="addprocess" )
+        {
+            Swal.fire({
+                title:'Success proccess',
+                icon:'success',
+                text:'Quistion has been added'
+            });
+        }
+        else if(document.getElementById("check_proccess").textContent =="notadd")
+        {
+            Swal.fire({
+                title:'Faild proccess',
+                icon:'error',
+                text:'Quistion Not added'
+            });
+        }
+        else if(document.getElementById("check_proccess").textContent =="deleteall" )
+        {
+            Swal.fire({
+                title:'Success proccess',
+                icon:'success',
+                text:'Last exam Has been Deleted'
+            });
+        }
+        let form_q = document.getElementById("form_quistions");
+        function sendquistion()
+        {
+            let q = document.getElementById("q");
+            let an1 = document.getElementById("an1");
+            let an2 = document.getElementById("an2");
+            let an3 = document.getElementById("an3");
+            let r = document.getElementById("r");
+            if(q.value=="" || an1.value== "" || an2.value == "" || an3.value=="" || r.value == "")
+            {
+                    Swal.fire({
+                        title: "Error!",
+                        text: "There is an Empty field",
+                        icon: "error",
+                    });
+                form_q.preventDefault();
+            }
+            form_q.submit()
+            for(let i=0 ; i<form_q.children.length ; i++)
+            {
+                form_q.children[i].value = ""
+            }
+        }
+        function delete_f()
+        {
+            let form_delete = document.getElementById("delete_form");
+            form_delete.submit()
+        }
+    </script>
+</body>
+</html>

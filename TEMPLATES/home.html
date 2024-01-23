@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+{%load static%}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz app</title>
+    <link rel="icon" href="{%static 'images/logo-search-grid-1x.png'%}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        *
+        {
+            margin: 0;
+            padding: 0;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            transition: all 800ms;
+        }
+        body
+        {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgb(242,255,242);
+            height: 100vh;
+            overflow: hidden;
+        }
+        #windowe
+        {
+            width: 700px;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        #continer_of_quistions
+        {
+            display: flex;
+            width: calc(700);
+        }
+        .qustion
+        {
+            width: 700px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        @media screen and (max-width: 767px) {
+            .qustion
+            {
+                margin-left: -10rem;
+            }
+        }
+        .qustion p
+        {
+            font-size: 2rem;
+            border-bottom: 1px solid black;
+            padding-bottom: 1rem;
+            margin-top: 1rem;
+        }
+        .qustion input
+        {
+            appearance: none;
+            width: 1rem;
+            height: 1rem;
+            border: 1px solid rgb(17,139,248);
+            position: relative;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: all 500ms;
+        }
+        input:checked
+        {
+            background-color: rgb(17,139,248);
+        }
+        button
+        {
+            background-color: transparent;
+            border-radius: 8px;
+            border: 1px solid rgb(17,139,248);
+            transition: all 800ms;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            margin-top: 1rem;
+            margin-left: .3rem;
+
+        }
+        button:hover
+        {
+            background-color: rgb(17,139,248);
+            box-shadow: 0px 0px 5px 2px rgb(17,139,248);
+        }
+        .collect_d_in
+        {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .collect_d_in p
+        {
+            font-size: 1rem;
+            margin-left: 1rem;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <p style="position: absolute; top:1rem; left:1rem;">Welcome {{user}}</p>
+    <br>
+    <span style="position: absolute; top:3rem; left:2rem;">your score is: {{user.exam_result}}</span>
+    <div id="windowe">
+        <p style="position: absolute;" id="numberof_q"></p>
+        <div id="continer_of_quistions">
+            {% for quistion in  quistions %}
+                <div class="qustion">
+                    <p>{{quistion.quistion}}</p>
+                    <hr>
+                    <br>
+                    <div style="display: flex; margin-top:1rem"><div class="collect_d_in"><input type="radio" name="{{quistion}}" class="right_answer"><p>{{quistion.right_answer}}</p></div>
+                    <div class="collect_d_in"><input type="radio" name="{{quistion}}" style="margin-left: 3rem;" ><p> {{quistion.first_answer}}</p></div></div>
+                    <div style="display: flex; margin-top:1rem">
+                    <div class="collect_d_in"><input type="radio" name="{{quistion}}"> <p>{{quistion.second_answer}}</p></div>
+                    <div class="collect_d_in"> <input type="radio" name="{{quistion}}" style="margin-left: 3rem;" ><p>{{quistion.third_answer}}</p></div> </div>
+                </div>
+            {% endfor %}
+        </div>
+        <button onclick="next()">Next</button>
+    </div>
+    <form style="display: none;" method="post">
+        {% csrf_token %}
+        <input type="text" id="result" name="score">
+    </form>
+    <script>
+        var container = document.getElementById("continer_of_quistions");
+        let n = document.getElementById("continer_of_quistions").children.length;
+        function submit()
+        {
+            let counter = 0;
+            let all_right_answer = document.querySelectorAll(".right_answer");
+            for(let i=0 ; i< all_right_answer.length ; i++)
+            {
+                if(all_right_answer[i].checked)
+                {
+                    ++counter;
+                }
+            }
+            document.getElementById("result").value = counter;
+            document.forms[0].submit();
+        }
+        document.getElementById("numberof_q").textContent = `this exam includ ${n} Quistion`
+        function ifthereisnoexam(){
+        if(n==0)
+        {
+            Swal.fire({
+                title:"Good News",
+                text:"No exams",
+                icon:"info"
+            });
+            console.log(n)
+        }
+        else
+        {
+            container.children[n-1].innerHTML += `<button onclick="submit()">Submit Exam</button>`;
+        }
+    }
+    ifthereisnoexam();
+        document.getElementById("continer_of_quistions").style.width = `${700 * n}px`;
+        let i = 0;
+        function next() {
+            i++;
+            if (i >= n) {
+                i = 0;
+            }
+            
+
+            if (window.innerWidth <= 800) {
+                container.style.marginLeft = `${-550 * i}px`;
+            } else {
+                container.style.marginLeft = `${-700 * i}px`;
+            }
+        }
+    </script>
+</body>
+</html>

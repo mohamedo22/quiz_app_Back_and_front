@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log in Student</title>
+    <link rel="icon" href="{%static 'images/logo-search-grid-1x.png'%}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        :root
+        {
+            --maincolor : rgb(17,139,248);
+        }
+        body
+        {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgb(242,255,242);
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+        }
+        *
+        {
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        }
+        #continar
+        {
+            display: flex;
+            margin-top: 6%;
+        }
+        #image
+        {
+            width: 30rem;
+        }
+        @media screen and (max-width: 767px) {
+            #image
+            {
+                display: none;
+            }
+            #continar
+            {
+                margin-top: 30%;
+                margin-left: -15%;
+                overflow: hidden;
+                width: 300px;
+                height: fit-content;
+            }
+            #planet-s
+            {
+                display: none;
+            }
+        }
+        form
+        {
+            width: fit-content;
+            padding: 2rem;
+            height: fit-content;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+        }
+        #logo_form
+        {
+            width: 4rem;
+            border-radius: 100%;
+            margin-left: -125%;
+            margin-top: -10%;
+        }
+        #student_logo
+        {
+            width: 2rem;
+            border-radius: 100%;
+            margin-left: 0%;
+        }
+        form p
+        {
+            margin-bottom: 2rem;
+        }
+        form input
+        {
+            width: 15rem ;
+            height: 3rem;
+            border: 1px solid var(--maincolor);
+            border-left: 0;
+            border-right: 0;
+            border-top: 0;
+            outline: none;
+            background-color: transparent;
+        }
+        form button
+        {
+            padding: .5rem 1rem;
+            border-radius: 8px;
+            color: black;
+            margin-bottom: 5rem;
+            outline: none;
+            border: 1px solid var(--maincolor);
+            cursor: pointer;
+            background-color: white;
+            transition: 800ms all;
+        }
+        form button:hover
+        {
+            background-color: var(--maincolor);
+            box-shadow: 0px 0px 10px 4px var(--maincolor);
+            color: white;
+        }
+        form *
+        {
+            position: relative;
+            z-index: 2;
+        }
+        #svg-st
+        {
+            width: 10rem;
+            position: absolute;
+            z-index: 1;
+            margin-top: 4vw;
+            opacity: 0.5;
+        }
+        #planet-s
+        {
+            position: absolute;
+            margin-top: 30%;
+            rotate: -5deg;
+            left: 15vw;
+            width: 10rem;
+        }
+        form a
+        {
+            text-decoration: none;
+            color: var(--maincolor);
+            transition: all 400ms;
+        }
+        form a:hover
+        {
+            color: rgb(80, 12, 15);
+        }
+    </style>
+</head>
+<body>
+     <div id="continar">
+        <form method="POST">
+            {% csrf_token %}
+            <img src="{%static 'images/logo-search-grid-1x.png'%}" id="logo_form" alt="">
+            <br>
+            <svg xmlns="http://www.w3.org/2000/svg" id="student_logo"  viewBox="0 0 448 512"><path d="M219.3 .5c3.1-.6 6.3-.6 9.4 0l200 40C439.9 42.7 448 52.6 448 64s-8.1 21.3-19.3 23.5L352 102.9V160c0 70.7-57.3 128-128 128s-128-57.3-128-128V102.9L48 93.3v65.1l15.7 78.4c.9 4.7-.3 9.6-3.3 13.3s-7.6 5.9-12.4 5.9H16c-4.8 0-9.3-2.1-12.4-5.9s-4.3-8.6-3.3-13.3L16 158.4V86.6C6.5 83.3 0 74.3 0 64C0 52.6 8.1 42.7 19.3 40.5l200-40zM111.9 327.7c10.5-3.4 21.8 .4 29.4 8.5l71 75.5c6.3 6.7 17 6.7 23.3 0l71-75.5c7.6-8.1 18.9-11.9 29.4-8.5C401 348.6 448 409.4 448 481.3c0 17-13.8 30.7-30.7 30.7H30.7C13.8 512 0 498.2 0 481.3c0-71.9 47-132.7 111.9-153.6z"/></svg>
+            <p>Welcome</p>
+            <input type="email" name="email" id="email-text" placeholder="Enter your e-mail"><br>
+            <input type="password" name="password" placeholder="Enter your Password" id="password-text"><br>
+            <button type="submit">Log in</button>
+            <a href="{%url 'teacher_login_page'%}">I am the teacher</a>
+            <img id="svg-st" src="{%static 'images/Choose-rafiki.png'%}" alt="">
+            <img id="planet-s" src="{%static 'images/cherry_blossom-amico.png'%}" alt="">
+        </form>
+        <img src="{% static 'images/photo_in_login.jpg'%}" alt="" id="image">
+        <p id="check_v" hidden>{{check}}</p>
+     </div>
+     <script>
+        let checkv = document.getElementById("check_v");
+        if(checkv.textContent == "false")
+        {
+            Swal.fire({
+                title:"Error!",
+                text:"The Email or password is wrong!",
+                icon: "error",
+            });
+        }
+        let email = document.getElementById("email-text");
+        let pass = document.getElementById("password-text");
+        document.forms[0].onsubmit = function (ev) {
+            if (email.value == "" || pass.value == "") {
+                Swal.fire({
+                    title: "Error!",
+                    text: "There is an Empty field",
+                    icon: "error",
+                });
+                ev.preventDefault();
+            }
+        };
+        
+     </script>
+</body>
+</html>
